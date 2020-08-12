@@ -11,20 +11,24 @@ RUN apt-get install -y php7.3-cli
 RUN apt-get install -y php7.3-mbstring
 RUN apt-get install -y php7.3-mysql
 RUN apt-get install -y openssl
+RUN apt-get install -y wget
 
 #SRCS
 COPY ./srcs/localhost /etc/nginx/sites-available/
 COPY ./srcs/phpMyAdmin.tar.gz /var/www/
-COPY ./srcs/wordpress.tar.gz /var/www/
+COPY ./srcs/wp-config.php /var/www/
 COPY ./srcs/wordpress.sql /var/www/
 COPY ./srcs/db_init.sql /var/www/
+COPY ./srcs/start.sh .
 
 #DATABASES
 RUN service mysql start && mysql -u root mysql < /var/www/db_init.sql && mysql wordpress -u root --password= < /var/www/wordpress.sql
 
 #WordPress and phpMyAdmin
-RUN tar -xvf /var/www/phpMyAdmin.tar.gz -C /var/www/html/
+RUN wget -O /var/www/wordpress.tar.gz https://wordpress.org/latest.tar.gz
 RUN tar -xvf /var/www/wordpress.tar.gz -C /var/www/html/
+RUN tar -xvf /var/www/phpMyAdmin.tar.gz -C /var/www/html/
+RUN mv /var/www/wp-config.php /var/www/html/wordpress/wp-config.php
 
 RUN rm /etc/nginx/sites-available/default
 RUN rm /etc/nginx/sites-enabled/default
@@ -39,8 +43,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=KR/ST=Seoul/L=
 #CHANGE_AUTH
 RUN chown -R www-data:www-data /var/www/html/*
 RUN chmod -R 755 /var/www/html/*
+RUN chmod 777 start.sh
 
-#SERVICE
-RUN service mysql restart
-RUN /etc/init.d/php7.3-fpm start
-RUN service nginx start
+ENTRYPOINT ./start.sh
