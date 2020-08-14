@@ -17,12 +17,12 @@ RUN apt-get install -y wget
 COPY ./srcs/localhost /etc/nginx/sites-available/
 COPY ./srcs/phpMyAdmin.tar.gz /var/www/
 COPY ./srcs/wp-config.php /var/www/
-COPY ./srcs/wordpress.sql /var/www/
-COPY ./srcs/db_init.sql /var/www/
+COPY ./srcs/wordpress.sql .
+COPY ./srcs/db_init.sql .
 COPY ./srcs/start.sh .
 
 #DATABASES
-RUN service mysql start && mysql -u root mysql < /var/www/db_init.sql && mysql wordpress -u root --password= < /var/www/wordpress.sql
+RUN service mysql start && mysql -u root mysql < db_init.sql && mysql wordpress -u root --password= < wordpress.sql
 
 #WordPress and phpMyAdmin
 RUN wget -O /var/www/wordpress.tar.gz https://wordpress.org/latest.tar.gz

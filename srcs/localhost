@@ -8,21 +8,21 @@ server {
 
 server {
 	listen 443 ssl ;
-        listen [::]:443 ssl ;
+    listen [::]:443 ssl ;
 
-        ssl on;
-        ssl_certificate /etc/ssl/certs/localhost.crt;
-        ssl_certificate_key /etc/ssl/certs/localhost.key;
+    ssl on;
+    ssl_certificate /etc/ssl/certs/localhost.crt;
+    ssl_certificate_key /etc/ssl/certs/localhost.key;
 
-        root /var/www/html;
+    root /var/www/;
 
-        index index.html index.htm index.nginx-debian.html index.php;
+    index index.html index.htm index.nginx-debian.html index.php;
 
-        server_name localhost www.localhost;
+    server_name localhost www.localhost;
+    autoindex on;
 
-	location / {
-		autoindex on;
-		try_files $uri $uri/ =404;
+    location / {
+        try_files $uri $uri/ =404;
 	}
 
         location ~ \.php$ {
