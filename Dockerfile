@@ -26,9 +26,9 @@ RUN service mysql start && mysql -u root mysql < db_init.sql && mysql wordpress 
 
 #WordPress and phpMyAdmin
 RUN wget -O /var/www/wordpress.tar.gz https://wordpress.org/latest.tar.gz
-RUN tar -xvf /var/www/wordpress.tar.gz -C /var/www/html/
-RUN tar -xvf /var/www/phpMyAdmin.tar.gz -C /var/www/html/
-RUN mv /var/www/wp-config.php /var/www/html/wordpress/wp-config.php
+RUN tar -xvf /var/www/wordpress.tar.gz -C /var/www/
+RUN tar -xvf /var/www/phpMyAdmin.tar.gz -C /var/www/
+RUN mv /var/www/wp-config.php /var/www/wordpress/wp-config.php
 
 RUN rm /etc/nginx/sites-available/default
 RUN rm /etc/nginx/sites-enabled/default
@@ -41,8 +41,8 @@ RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=KR/ST=Seoul/L=Seoul/O=42/CN=sseo' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
 #CHANGE_AUTH
-RUN chown -R www-data:www-data /var/www/html/*
-RUN chmod -R 755 /var/www/html/*
+RUN chown -R www-data:www-data /var/www/*
+RUN chmod -R 755 /var/www/*
 RUN chmod 777 start.sh
 
 ENTRYPOINT ./start.sh
